@@ -11,6 +11,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "Interfaces/InteractionInterface.h"
 #include "GameFramework/PlayerController.h"
+#include "PSJamJan/Interfaces/PickUpInterface.h"
+#include "FlashLight.h"
+#include "PSJamJan/TP_WeaponComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // APSJamJanCharacter
@@ -37,7 +40,7 @@ APSJamJanCharacter::APSJamJanCharacter()
 	Mesh1P->CastShadow = false;
 	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
-
+	Equipped = CreateDefaultSubobject<UTP_WeaponComponent>(TEXT("EquippedComponent"));
 }
 
 void APSJamJanCharacter::BeginPlay()
@@ -59,6 +62,7 @@ void APSJamJanCharacter::BeginPlay()
 
 void APSJamJanCharacter::Tick(float DeltaSeconds)
 {
+	Super::Tick(DeltaSeconds);
 	ShootRay();
 }
 
@@ -216,6 +220,17 @@ void APSJamJanCharacter::ShootRay()
 					StopInteract();
 					RemoveMappingContext(DefaultMappingContext);
 					AddMappingContext(InteractMappingContext);
+				}
+			}
+		}
+		else if(Hit->Implements<UPickUpInterface>())
+		{
+			if (Cast<AFlashLight>(Hit))
+			{
+				if (InteractPressed)
+				{
+					Equipped->AttachWeapon(nullptr);
+					InteractPressed = false;
 				}
 			}
 		}

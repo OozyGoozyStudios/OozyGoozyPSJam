@@ -54,6 +54,9 @@ class APSJamJanCharacter : public ACharacter
 	bool Interatable = false;
 
 	bool InteractPressed = false;
+
+	class UTP_WeaponComponent* Equipped;
+
 public:
 	APSJamJanCharacter();
 

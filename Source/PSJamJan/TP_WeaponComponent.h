@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "FlashLight.h"
 #include "TP_WeaponComponent.generated.h"
 
 class APSJamJanCharacter;
@@ -41,6 +42,8 @@ public:
 	/** Sets default values for this component's properties */
 	UTP_WeaponComponent();
 
+	UPROPERTY(EditAnywhere)
+	AFlashLight* FlashLight;
 	/** Attaches the actor to a FirstPersonCharacter */
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void AttachWeapon(APSJamJanCharacter* TargetCharacter);
