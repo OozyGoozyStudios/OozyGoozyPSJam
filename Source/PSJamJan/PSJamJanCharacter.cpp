@@ -7,7 +7,10 @@
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-
+#include "DrawDebugHelpers.h"
+#include "Kismet/GameplayStatics.h"
+#include "Interfaces/InteractionInterface.h"
+#include "GameFramework/PlayerController.h"
 
 //////////////////////////////////////////////////////////////////////////
 // APSJamJanCharacter
@@ -48,9 +51,15 @@ void APSJamJanCharacter::BeginPlay()
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
+			
 		}
 	}
 
+}
+
+void APSJamJanCharacter::Tick(float DeltaSeconds)
+{
+	ShootRay();
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -69,6 +78,14 @@ void APSJamJanCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APSJamJanCharacter::Look);
+		
+		//Interacting
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &APSJamJanCharacter::Interact);
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Completed, this, &APSJamJanCharacter::StopInteract);
+
+		// Focused 
+		EnhancedInputComponent->BindAction(ExitInteractAction, ETriggerEvent::Triggered, this, &APSJamJanCharacter::StartExitInteract);
+		EnhancedInputComponent->BindAction(ExitInteractAction, ETriggerEvent::Completed, this, &APSJamJanCharacter::StopExitInteract);
 	}
 }
 
@@ -99,6 +116,59 @@ void APSJamJanCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
+void APSJamJanCharacter::Interact()
+{
+	if (Interatable)
+	{
+		InteractPressed = true;
+	}
+}
+
+void APSJamJanCharacter::StopInteract()
+{
+	InteractPressed = false;
+}
+
+void APSJamJanCharacter::StartExitInteract()
+{
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (PlayerController)
+	{
+		PlayerController->SetViewTargetWithBlend(this);
+		StopInteract();
+		RemoveMappingContext(InteractMappingContext);
+		AddMappingContext(DefaultMappingContext);
+	}
+}
+
+void APSJamJanCharacter::StopExitInteract()
+{
+
+}
+
+void APSJamJanCharacter::AddMappingContext(class UInputMappingContext* Map)
+{
+	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(Map, 0);
+
+		}
+	}
+}
+
+void APSJamJanCharacter::RemoveMappingContext(class UInputMappingContext* Map)
+{
+	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->RemoveMappingContext(Map);
+		}
+	}
+}
+
 void APSJamJanCharacter::SetHasRifle(bool bNewHasRifle)
 {
 	bHasRifle = bNewHasRifle;
@@ -107,4 +177,52 @@ void APSJamJanCharacter::SetHasRifle(bool bNewHasRifle)
 bool APSJamJanCharacter::GetHasRifle()
 {
 	return bHasRifle;
+}
+
+void APSJamJanCharacter::ShootRay()
+{
+	if (FirstPersonCameraComponent)
+	{
+		FTransform CameraTransform = FirstPersonCameraComponent->GetComponentTransform();
+		FVector CameraLocation = CameraTransform.GetLocation();
+		FVector CameraDirection = CameraTransform.GetRotation().GetForwardVector();
+		FVector CameraRay = CameraLocation + CameraDirection * 200.0f;
+		if (GetWorld()->LineTraceSingleByChannel(HitResult, CameraLocation, CameraRay, ECollisionChannel::ECC_Visibility))
+		{
+			DrawDebugLine(
+				GetWorld(),
+				CameraLocation,
+				HitResult.Location,
+				FColor(255, 0, 0),
+				false, -1, 0,
+				12.333
+			);
+
+		}
+	}
+	AActor* Hit = HitResult.GetActor();
+	if (Hit)
+	{
+		if (Hit->Implements<UInteractionInterface>())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Hitting a interactable object"));
+			Interatable = true;
+			if (InteractPressed)
+			{
+				APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+				if (PlayerController)
+				{
+					PlayerController->SetViewTargetWithBlend(Hit);
+					StopInteract();
+					RemoveMappingContext(DefaultMappingContext);
+					AddMappingContext(InteractMappingContext);
+				}
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Not Hitting a interactable object"));
+		}
+	}
+	
 }
