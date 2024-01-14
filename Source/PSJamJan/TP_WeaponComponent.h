@@ -43,8 +43,8 @@ public:
 
 	/** Attaches the actor to a FirstPersonCharacter */
 	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void AttachWeapon(APSJamJanCharacter* TargetCharacter);
 
-	void AttachWeapon(APSJamJanCharacter* TargetCharacter, AActor* Weapon);
 	/** Make the weapon Fire a Projectile */
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void Fire();
