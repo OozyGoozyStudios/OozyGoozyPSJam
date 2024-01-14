@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "Components/SkeletalMeshComponent.h"
 
 // Sets default values for this component's properties
 UTP_WeaponComponent::UTP_WeaponComponent()
@@ -64,7 +65,7 @@ void UTP_WeaponComponent::Fire()
 	}
 }
 
-void UTP_WeaponComponent::AttachWeapon(APSJamJanCharacter* TargetCharacter)
+void UTP_WeaponComponent::AttachWeapon(APSJamJanCharacter* TargetCharacter, AActor* Weapon)
 {
 	Character = TargetCharacter;
 	if (Character == nullptr)
@@ -72,17 +73,22 @@ void UTP_WeaponComponent::AttachWeapon(APSJamJanCharacter* TargetCharacter)
 		return;
 	}
 	
-	const USkeletalMeshSocket* HandSocket = Character->GetMesh()->GetSocketByName(FName("FlashLight"));
-
-	if (HandSocket)
+	USkeletalMeshComponent* FlashLightPos = Cast<USkeletalMeshComponent>(Character->GetComponentsByTag(USkeletalMeshComponent::StaticClass(), "CharacterMesh1P")[0]);
+	if (FlashLightPos == nullptr)
 	{
-		HandSocket->AttachActor(FlashLight, Character->GetMesh());
+		return;
 	}
-	FlashLight->SetOwner(Character);
+	const USkeletalMeshSocket* HandSocket = FlashLightPos->GetSocketByName(FName("FlashLight"));
+
+	if (HandSocket && Weapon)
+	{
+		HandSocket->AttachActor(Weapon, Character->GetMesh());
+		Weapon->SetOwner(Character);
+	}
 	//EquippedWeapon->ShowPickupWidget(false);
 	// Attach the weapon to the First Person Character
-	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
-	AttachToComponent(Character->GetMesh1P(), AttachmentRules, FName(TEXT("FlashLight")));
+	/*FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
+	AttachToComponent(Character->GetMesh1P(), AttachmentRules, FName(TEXT("FlashLight")));*/
 	
 	// switch bHasRifle so the animation blueprint can switch to another animation set
 	/*Character->SetHasRifle(true);*/

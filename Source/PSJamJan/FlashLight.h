@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
 #include "PSJamJan/Interfaces/PickUpInterface.h"
+#include "GameFramework/Actor.h"
 #include "FlashLight.generated.h"
 
 UCLASS()

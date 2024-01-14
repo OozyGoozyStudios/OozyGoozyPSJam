@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "FlashLight.h"
+#include "Components/SpotLightComponent.h"
 #include "PSJamJanCharacter.generated.h"
 
 class UInputComponent;
@@ -14,7 +16,7 @@ class UCameraComponent;
 class UAnimMontage;
 class USoundBase;
 
-UCLASS(config=Game)
+UCLASS()
 class APSJamJanCharacter : public ACharacter
 {
 	GENERATED_BODY()
@@ -42,6 +44,12 @@ class APSJamJanCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	class UInputAction* MoveAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	class UInputAction* ToggleLightAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	class UInputAction* RechargeLightAction;
+
 	/** Interact Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	class UInputAction* InteractAction;
@@ -55,10 +63,31 @@ class APSJamJanCharacter : public ACharacter
 
 	bool InteractPressed = false;
 
-	class UTP_WeaponComponent* Equipped;
+	class UPickupComponent* Equipped;
 
+	bool FlashLightEquipped = false;
+
+	bool LightOnOff = false;
+
+	USpotLightComponent* SpotLight;
+
+	FTimerHandle LightTimerhandle;
+
+	UPROPERTY(EditAnywhere)
+	float StartLightCharge = 60;
+
+	UPROPERTY(VisibleAnywhere)
+	float CurrentLightCharge;
+
+	UPROPERTY(VisibleAnywhere)
+	float BrightnessPercentage;
+
+	UPROPERTY(EditAnywhere)
+	float RateOfDecayLight;
 public:
 	APSJamJanCharacter();
+
+	
 
 protected:
 	virtual void BeginPlay();
@@ -84,6 +113,17 @@ public:
 
 	void ShootRay();
 
+	void ToggleLight();
+	void StopLight();
+
+	void ToggleFlashLight(bool OnOff);
+	USpotLightComponent* GetLight();
+	
+	void StartTimer();
+	void StopTimer();
+	void SubtractTime();
+	void AddTime();
+	void SetBrightness();
 protected:
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
@@ -99,6 +139,10 @@ protected:
 
 	void AddMappingContext(class UInputMappingContext* Map);
 	void RemoveMappingContext(class UInputMappingContext* Map);
+
+	void RechargeLight();
+	void StopRechargeLight();
+
 
 protected:
 	// APawn interface

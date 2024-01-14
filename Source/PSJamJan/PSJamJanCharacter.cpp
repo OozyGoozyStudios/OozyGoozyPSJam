@@ -14,6 +14,8 @@
 #include "PSJamJan/Interfaces/PickUpInterface.h"
 #include "FlashLight.h"
 #include "PSJamJan/TP_WeaponComponent.h"
+#include "Components/PickupComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 //////////////////////////////////////////////////////////////////////////
 // APSJamJanCharacter
@@ -33,14 +35,15 @@ APSJamJanCharacter::APSJamJanCharacter()
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
 
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
-	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
+	/*Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
 	Mesh1P->SetOnlyOwnerSee(true);
 	Mesh1P->SetupAttachment(FirstPersonCameraComponent);
 	Mesh1P->bCastDynamicShadow = false;
-	Mesh1P->CastShadow = false;
+	Mesh1P->CastShadow = false;*/
 	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
-	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
-	Equipped = CreateDefaultSubobject<UTP_WeaponComponent>(TEXT("EquippedComponent"));
+	//Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
+	Equipped = CreateDefaultSubobject<UPickupComponent>(TEXT("EquippedComponent"));
+
 }
 
 void APSJamJanCharacter::BeginPlay()
@@ -57,6 +60,8 @@ void APSJamJanCharacter::BeginPlay()
 			
 		}
 	}
+	CurrentLightCharge = StartLightCharge;
+	SpotLight = GetLight();
 
 }
 
@@ -64,6 +69,8 @@ void APSJamJanCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	ShootRay();
+	SetBrightness();
+	
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -90,6 +97,13 @@ void APSJamJanCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 		// Focused 
 		EnhancedInputComponent->BindAction(ExitInteractAction, ETriggerEvent::Triggered, this, &APSJamJanCharacter::StartExitInteract);
 		EnhancedInputComponent->BindAction(ExitInteractAction, ETriggerEvent::Completed, this, &APSJamJanCharacter::StopExitInteract);
+
+		EnhancedInputComponent->BindAction(ToggleLightAction, ETriggerEvent::Triggered, this, &APSJamJanCharacter::ToggleLight);
+		EnhancedInputComponent->BindAction(ToggleLightAction, ETriggerEvent::Completed, this, &APSJamJanCharacter::StopLight);
+
+		EnhancedInputComponent->BindAction(RechargeLightAction, ETriggerEvent::Triggered, this, &APSJamJanCharacter::RechargeLight);
+		EnhancedInputComponent->BindAction(RechargeLightAction, ETriggerEvent::Completed, this, &APSJamJanCharacter::StopRechargeLight);
+
 	}
 }
 
@@ -173,6 +187,16 @@ void APSJamJanCharacter::RemoveMappingContext(class UInputMappingContext* Map)
 	}
 }
 
+void APSJamJanCharacter::RechargeLight()
+{
+	AddTime();
+}
+
+void APSJamJanCharacter::StopRechargeLight()
+{
+
+}
+
 void APSJamJanCharacter::SetHasRifle(bool bNewHasRifle)
 {
 	bHasRifle = bNewHasRifle;
@@ -223,21 +247,115 @@ void APSJamJanCharacter::ShootRay()
 				}
 			}
 		}
-		else if(Hit->Implements<UPickUpInterface>())
+		if(Hit->Implements<UPickUpInterface>())
 		{
-			if (Cast<AFlashLight>(Hit))
+			UE_LOG(LogTemp, Warning, TEXT("Hitting a Pickable object"));
+			AFlashLight* FlashLight = Cast<AFlashLight>(Hit);
+			if (FlashLight)
 			{
-				if (InteractPressed)
+				Interatable = true;
+				if (InteractPressed && Equipped && FlashLight)
 				{
-					Equipped->AttachWeapon(nullptr);
+					Equipped->AttachWeapon(this, FlashLight);
 					InteractPressed = false;
+					FlashLightEquipped = true;
 				}
 			}
 		}
 		else
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Not Hitting a interactable object"));
+			/*Interatable = false;*/
 		}
 	}
 	
+}
+
+void APSJamJanCharacter::ToggleLight()
+{
+
+}
+
+void APSJamJanCharacter::StopLight()
+{
+	if (FlashLightEquipped)
+	{
+		if (LightOnOff == true)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Light Off"));
+			LightOnOff = false;
+			ToggleFlashLight(false);
+			StopTimer();
+			return;
+		}
+		if (LightOnOff == false)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Light On"));
+			LightOnOff = true;
+			ToggleFlashLight(true);
+			StartTimer();
+		}
+	}
+}
+
+void APSJamJanCharacter::ToggleFlashLight(bool OnOff)
+{
+	SpotLight->SetVisibility(OnOff);
+}
+
+USpotLightComponent* APSJamJanCharacter::GetLight()
+{
+	TArray<UActorComponent*> FlashLightArray = this->GetComponentsByClass(USpotLightComponent::StaticClass());
+
+	for (auto& Light : FlashLightArray)
+	{
+		return SpotLight = Cast<USpotLightComponent>(Light);
+	}
+	return nullptr;
+}
+
+void APSJamJanCharacter::StartTimer()
+{
+	
+	if (!GetWorld()->GetTimerManager().IsTimerActive(LightTimerhandle))
+	{
+		
+		GetWorld()->GetTimerManager().SetTimer(LightTimerhandle, this, &APSJamJanCharacter::SubtractTime, 1.0f, false, 0.0f);
+	}
+	else if (GetWorld()->GetTimerManager().IsTimerPaused(LightTimerhandle))
+	{
+		GetWorld()->GetTimerManager().UnPauseTimer(LightTimerhandle);
+	}
+}
+
+void APSJamJanCharacter::StopTimer()
+{
+	if (GetWorld()->GetTimerManager().IsTimerActive(LightTimerhandle))
+	{
+		GetWorld()->GetTimerManager().PauseTimer(LightTimerhandle);
+	}
+}
+
+void APSJamJanCharacter::SubtractTime()
+{
+	if (CurrentLightCharge > 0)
+	{
+		CurrentLightCharge -= RateOfDecayLight;
+		GetWorld()->GetTimerManager().ClearTimer(LightTimerhandle);
+		StartTimer();
+	}
+}
+
+void APSJamJanCharacter::AddTime()
+{
+	if (CurrentLightCharge < StartLightCharge)
+	{
+		CurrentLightCharge = UKismetMathLibrary::Min(StartLightCharge, (CurrentLightCharge + 10.0f));
+	}
+}
+
+void APSJamJanCharacter::SetBrightness()
+{
+	BrightnessPercentage = (CurrentLightCharge/StartLightCharge) * 100;
+	SpotLight->SetIntensity(BrightnessPercentage);
 }
