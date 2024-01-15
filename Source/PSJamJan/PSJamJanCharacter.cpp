@@ -270,6 +270,7 @@ void APSJamJanCharacter::ShootRay()
 					{
 						SpotLight = GetLight();
 					}
+					SetCollectedItems(CollectedItems + 1);
 				}
 			}
 		}

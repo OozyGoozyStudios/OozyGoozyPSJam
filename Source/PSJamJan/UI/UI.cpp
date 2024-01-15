@@ -80,13 +80,30 @@ void UUI::UpdateText()
 					if ((Character->GetCurrentQuestNumber() + 1) < QuestData->QuestVector.Num())
 					{
 						Character->AddToQuestNumber(1);
+						Character->SetCollectedItems(0);
 					}
 				}
 				break;
 			}
 			case EObjectiveType::CompleteInteraction:
 			{
-				
+				int PlayerProgress = Character->GetCollectedItems();
+				if (PlayerProgress < LevelQuest.NumberOfObjectives)
+				{
+					FText text = FText::FromString(LevelQuest.QuestText);
+					mission->QuestText->SetText(text);
+					FString FractionText = FString::Printf(TEXT("%d/%d"), PlayerProgress, LevelQuest.NumberOfObjectives);
+					mission->Progression->SetText(FText::FromString(FractionText));
+				}
+
+				if (PlayerProgress >= LevelQuest.NumberOfObjectives)
+				{
+					if ((Character->GetCurrentQuestNumber() + 1) < QuestData->QuestVector.Num())
+					{
+						Character->AddToQuestNumber(1);
+						Character->SetCollectedItems(0);
+					}
+				}
 				break;
 			}
 			
