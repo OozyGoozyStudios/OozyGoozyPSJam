@@ -111,7 +111,10 @@ public:
 	{
 		return CollectedItems;
 	}
-
+	void SetCollectedItems(int CollectedNum)
+	{
+		CollectedItems = CollectedNum;
+	}
 protected:
 	virtual void BeginPlay();
 	virtual void Tick( float DeltaSeconds ) override;

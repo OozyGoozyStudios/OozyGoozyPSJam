@@ -266,6 +266,7 @@ void APSJamJanCharacter::ShootRay()
 					Equipped->AttachWeapon(this, FlashLight);
 					InteractPressed = false;
 					FlashLightEquipped = true;
+					SetCollectedItems(GetCollectedItems() + 1);
 					if (!SpotLight)
 					{
 						SpotLight = GetLight();
