@@ -69,7 +69,11 @@ void APSJamJanCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	ShootRay();
-	SetBrightness();
+	if (SpotLight)
+	{
+		SetBrightness();
+
+	}
 	
 }
 
