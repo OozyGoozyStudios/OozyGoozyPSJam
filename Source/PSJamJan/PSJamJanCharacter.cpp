@@ -62,7 +62,10 @@ void APSJamJanCharacter::BeginPlay()
 	}
 	CurrentLightCharge = StartLightCharge;
 	SpotLight = GetLight();
-
+	if (SpotLight)
+	{
+		SpotLight->SetVisibility(false);
+	}
 }
 
 void APSJamJanCharacter::Tick(float DeltaSeconds)
@@ -105,8 +108,8 @@ void APSJamJanCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 		EnhancedInputComponent->BindAction(ToggleLightAction, ETriggerEvent::Triggered, this, &APSJamJanCharacter::ToggleLight);
 		EnhancedInputComponent->BindAction(ToggleLightAction, ETriggerEvent::Completed, this, &APSJamJanCharacter::StopLight);
 
-		EnhancedInputComponent->BindAction(RechargeLightAction, ETriggerEvent::Triggered, this, &APSJamJanCharacter::RechargeLight);
-		EnhancedInputComponent->BindAction(RechargeLightAction, ETriggerEvent::Completed, this, &APSJamJanCharacter::StopRechargeLight);
+		//EnhancedInputComponent->BindAction(RechargeLightAction, ETriggerEvent::Triggered, this, &APSJamJanCharacter::RechargeLight);
+		EnhancedInputComponent->BindAction(RechargeLightAction, ETriggerEvent::Completed, this, &APSJamJanCharacter::RechargeLight);
 
 	}
 }
@@ -263,6 +266,10 @@ void APSJamJanCharacter::ShootRay()
 					Equipped->AttachWeapon(this, FlashLight);
 					InteractPressed = false;
 					FlashLightEquipped = true;
+					if (!SpotLight)
+					{
+						SpotLight = GetLight();
+					}
 				}
 			}
 		}
@@ -360,6 +367,13 @@ void APSJamJanCharacter::AddTime()
 
 void APSJamJanCharacter::SetBrightness()
 {
-	BrightnessPercentage = (CurrentLightCharge/StartLightCharge) * 100;
+	BrightnessPercentage = (CurrentLightCharge/StartLightCharge) * MaxIntensity;
 	SpotLight->SetIntensity(BrightnessPercentage);
+}
+
+UQuestDataAsset* APSJamJanCharacter::GetQuestDataAsset()
+{
+	UQuestDataAsset* MissionDataAsset = LoadObject<UQuestDataAsset>(NULL, TEXT("/Game/FirstPerson/Blueprints/Quests/DA_Quest"));
+	return MissionDataAsset;
+
 }

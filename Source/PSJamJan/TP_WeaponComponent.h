@@ -49,8 +49,8 @@ public:
 
 	void AttachWeapon(APSJamJanCharacter* TargetCharacter, AActor* Weapon);
 	/** Make the weapon Fire a Projectile */
-	UFUNCTION(BlueprintCallable, Category="Weapon")
-	void Fire();
+	/*UFUNCTION(BlueprintCallable, Category="Weapon")
+	void Fire();*/
 
 protected:
 	/** Ends gameplay for this component. */

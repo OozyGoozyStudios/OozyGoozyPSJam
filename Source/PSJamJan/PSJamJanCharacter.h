@@ -7,6 +7,7 @@
 #include "InputActionValue.h"
 #include "FlashLight.h"
 #include "Components/SpotLightComponent.h"
+#include "Quests/QuestDataAsset.h"
 #include "PSJamJanCharacter.generated.h"
 
 class UInputComponent;
@@ -74,7 +75,7 @@ class APSJamJanCharacter : public ACharacter
 	FTimerHandle LightTimerhandle;
 
 	UPROPERTY(EditAnywhere)
-	float StartLightCharge = 60;
+	float StartLightCharge = 60.0f;
 
 	UPROPERTY(VisibleAnywhere)
 	float CurrentLightCharge;
@@ -83,11 +84,33 @@ class APSJamJanCharacter : public ACharacter
 	float BrightnessPercentage;
 
 	UPROPERTY(EditAnywhere)
-	float RateOfDecayLight;
+	float RateOfDecayLight = 0.1f;
+
+	UPROPERTY(EditAnywhere)
+	float MaxIntensity = 100.0f;
+
+	//Quest Variables
+	UPROPERTY(VisibleAnywhere)
+	int CollectedItems = 0;
+	UPROPERTY(VisibleAnywhere)
+	int CurrentQuestNumber = 0;
+
+
 public:
 	APSJamJanCharacter();
-
-	
+	int GetCurrentQuestNumber()
+	{
+		return CurrentQuestNumber;
+	}
+	void AddToQuestNumber(int add)
+	{
+		
+		CurrentQuestNumber += add;
+	}
+	int GetCollectedItems()
+	{
+		return CollectedItems;
+	}
 
 protected:
 	virtual void BeginPlay();
@@ -124,6 +147,7 @@ public:
 	void SubtractTime();
 	void AddTime();
 	void SetBrightness();
+	UQuestDataAsset* GetQuestDataAsset();
 protected:
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
