@@ -15,9 +15,9 @@ class PSJAMJAN_API UQuestWidget : public UUserWidget
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(meta = (BindWidget))
+	/*UPROPERTY(meta = (BindWidget))
 	class UTextBlock* QuestText;
 
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* Progression;
+	class UTextBlock* Progression;*/
 };

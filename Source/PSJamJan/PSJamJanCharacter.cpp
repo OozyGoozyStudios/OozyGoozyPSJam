@@ -60,23 +60,23 @@ void APSJamJanCharacter::BeginPlay()
 			
 		}
 	}
-	CurrentLightCharge = StartLightCharge;
+	/*CurrentLightCharge = StartLightCharge;
 	SpotLight = GetLight();
 	if (SpotLight)
 	{
 		SpotLight->SetVisibility(false);
-	}
+	}*/
 }
 
 void APSJamJanCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	ShootRay();
+	/*ShootRay();
 	if (SpotLight)
 	{
 		SetBrightness();
 
-	}
+	}*/
 	
 }
 
@@ -224,14 +224,14 @@ void APSJamJanCharacter::ShootRay()
 		FVector CameraRay = CameraLocation + CameraDirection * 200.0f;
 		if (GetWorld()->LineTraceSingleByChannel(HitResult, CameraLocation, CameraRay, ECollisionChannel::ECC_Visibility))
 		{
-			DrawDebugLine(
+			/*DrawDebugLine(
 				GetWorld(),
 				CameraLocation,
 				HitResult.Location,
 				FColor(255, 0, 0),
 				false, -1, 0,
 				12.333
-			);
+			);*/
 
 		}
 	}
