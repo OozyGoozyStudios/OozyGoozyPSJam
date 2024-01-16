@@ -67,7 +67,7 @@ void UUI::UpdateText()
 			{
 				
 				int PlayerProgress = Character->GetCollectedItems();
-				if (PlayerProgress < LevelQuest.NumberOfObjectives)
+				if (PlayerProgress <= LevelQuest.NumberOfObjectives)
 				{
 					FText text = FText::FromString(LevelQuest.QuestText);
 					mission->QuestText->SetText(text);
@@ -77,7 +77,7 @@ void UUI::UpdateText()
 
 				if (PlayerProgress >= LevelQuest.NumberOfObjectives)
 				{
-					if ((Character->GetCurrentQuestNumber() + 1) < QuestData->QuestVector.Num())
+					if ((Character->GetCurrentQuestNumber() + 1) <= QuestData->QuestVector.Num())
 					{
 						Character->AddToQuestNumber(1);
 						Character->SetCollectedItems(0);
@@ -88,7 +88,7 @@ void UUI::UpdateText()
 			case EObjectiveType::CompleteInteraction:
 			{
 				int PlayerProgress = Character->GetCollectedItems();
-				if (PlayerProgress < LevelQuest.NumberOfObjectives)
+				if (PlayerProgress <= LevelQuest.NumberOfObjectives)
 				{
 					FText text = FText::FromString(LevelQuest.QuestText);
 					mission->QuestText->SetText(text);
@@ -98,7 +98,7 @@ void UUI::UpdateText()
 
 				if (PlayerProgress >= LevelQuest.NumberOfObjectives)
 				{
-					if ((Character->GetCurrentQuestNumber() + 1) < QuestData->QuestVector.Num())
+					if ((Character->GetCurrentQuestNumber() + 1) <= QuestData->QuestVector.Num())
 					{
 						Character->AddToQuestNumber(1);
 						Character->SetCollectedItems(0);

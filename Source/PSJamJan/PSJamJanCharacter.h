@@ -111,9 +111,9 @@ public:
 	{
 		return CollectedItems;
 	}
-	void SetCollectedItems(int CurrentItem)
+	void SetCollectedItems(int CollectedNum)
 	{
-		CollectedItems = CurrentItem;
+		CollectedItems = CollectedNum;
 	}
 protected:
 	virtual void BeginPlay();
