@@ -156,14 +156,14 @@ void APSJamJanCharacter::StopInteract()
 
 void APSJamJanCharacter::StartExitInteract()
 {
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	/*APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (PlayerController)
 	{
 		PlayerController->SetViewTargetWithBlend(this);
 		StopInteract();
 		RemoveMappingContext(InteractMappingContext);
 		AddMappingContext(DefaultMappingContext);
-	}
+	}*/
 }
 
 void APSJamJanCharacter::StopExitInteract()
@@ -173,30 +173,30 @@ void APSJamJanCharacter::StopExitInteract()
 
 void APSJamJanCharacter::AddMappingContext(class UInputMappingContext* Map)
 {
-	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	/*if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(Map, 0);
 
 		}
-	}
+	}*/
 }
 
 void APSJamJanCharacter::RemoveMappingContext(class UInputMappingContext* Map)
 {
-	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	/*if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->RemoveMappingContext(Map);
 		}
-	}
+	}*/
 }
 
 void APSJamJanCharacter::RechargeLight()
 {
-	AddTime();
+	/*AddTime();*/
 }
 
 void APSJamJanCharacter::StopRechargeLight()
