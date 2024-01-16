@@ -9,10 +9,10 @@
 UUI::UUI(const FObjectInitializer& ObjectInitializer)
 	:UUserWidget(ObjectInitializer)
 {
-	static ConstructorHelpers::FClassFinder<UUserWidget> QuestBPClass(TEXT("/Game/FirstPerson/Blueprints/UserInterface/WBP_Quest"));
+	/*static ConstructorHelpers::FClassFinder<UUserWidget> QuestBPClass(TEXT("/Game/FirstPerson/Blueprints/UserInterface/WBP_Quest"));
 	if (!ensure(QuestBPClass.Class != nullptr)) return;
 
-	QuestClass = QuestBPClass.Class;
+	QuestClass = QuestBPClass.Class;*/
 }
 
 void UUI::Setup()
@@ -24,17 +24,17 @@ bool UUI::Initialize()
 {
 	bool Success = Super::Initialize();
 
-	PlayerController = GetOwningPlayer();
-	if (PlayerController == nullptr)
-	{
-		return false;
-	}
-	Character = Cast<APSJamJanCharacter>(PlayerController->GetCharacter());
-	if (Character == nullptr)
-	{
-		return false;
-	}
-	QuestData = Character->GetQuestDataAsset();
+	//PlayerController = GetOwningPlayer();
+	//if (PlayerController == nullptr)
+	//{
+	//	return false;
+	//}
+	//Character = Cast<APSJamJanCharacter>(PlayerController->GetCharacter());
+	//if (Character == nullptr)
+	//{
+	//	return false;
+	//}
+	//QuestData = Character->GetQuestDataAsset();
 
 
 
@@ -44,10 +44,10 @@ bool UUI::Initialize()
 void UUI::Mission()
 {
 
-	mission = CreateWidget<UQuestWidget>(GetWorld(), QuestClass);
+	/*mission = CreateWidget<UQuestWidget>(GetWorld(), QuestClass);
 	if (!ensure(mission != nullptr)) return;
 	UpdateText();
-	QuestBox->AddChild(mission);
+	QuestBox->AddChild(mission);*/
 
 }
 
@@ -57,7 +57,7 @@ void UUI::UpdateText()
 
 	
 
-	if (QuestData && Character->GetCurrentQuestNumber() < QuestData->QuestVector.Num())
+	/*if (QuestData && Character->GetCurrentQuestNumber() < QuestData->QuestVector.Num())
 	{
 		
 		FQuest LevelQuest = QuestData->QuestVector[Character->GetCurrentQuestNumber()];
@@ -111,5 +111,5 @@ void UUI::UpdateText()
 			default:
 				break;
 			}
-	}
+	}*/
 }
