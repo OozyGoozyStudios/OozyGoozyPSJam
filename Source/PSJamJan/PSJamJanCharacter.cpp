@@ -318,13 +318,15 @@ void APSJamJanCharacter::ToggleFlashLight(bool OnOff)
 
 USpotLightComponent* APSJamJanCharacter::GetLight()
 {
-	TArray<UActorComponent*> FlashLightArray = this->GetComponentsByClass(USpotLightComponent::StaticClass());
+	/* TArray<UActorComponent*> FlashLightArray = this->GetComponentsByClass(USpotLightComponent::StaticClass());
 
 	for (auto& Light : FlashLightArray)
 	{
 		return SpotLight = Cast<USpotLightComponent>(Light);
 	}
+	*/
 	return nullptr;
+
 }
 
 void APSJamJanCharacter::StartTimer()
