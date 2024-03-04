@@ -92,10 +92,10 @@ void APSJamJanCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
 		//Moving
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APSJamJanCharacter::Move);
+		// EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APSJamJanCharacter::Move);
 
 		//Looking
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APSJamJanCharacter::Look);
+		// EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APSJamJanCharacter::Look);
 		
 		//Interacting
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &APSJamJanCharacter::Interact);
@@ -111,33 +111,6 @@ void APSJamJanCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 		//EnhancedInputComponent->BindAction(RechargeLightAction, ETriggerEvent::Triggered, this, &APSJamJanCharacter::RechargeLight);
 		EnhancedInputComponent->BindAction(RechargeLightAction, ETriggerEvent::Completed, this, &APSJamJanCharacter::RechargeLight);
 
-	}
-}
-
-
-void APSJamJanCharacter::Move(const FInputActionValue& Value)
-{
-	// input is a Vector2D
-	FVector2D MovementVector = Value.Get<FVector2D>();
-
-	if (Controller != nullptr)
-	{
-		// add movement 
-		AddMovementInput(GetActorForwardVector(), MovementVector.Y);
-		AddMovementInput(GetActorRightVector(), MovementVector.X);
-	}
-}
-
-void APSJamJanCharacter::Look(const FInputActionValue& Value)
-{
-	// input is a Vector2D
-	FVector2D LookAxisVector = Value.Get<FVector2D>();
-
-	if (Controller != nullptr)
-	{
-		// add yaw and pitch input to controller
-		AddControllerYawInput(LookAxisVector.X);
-		AddControllerPitchInput(LookAxisVector.Y);
 	}
 }
 
