@@ -6,6 +6,7 @@
 
 void APSJamJanGameMode::BeginPlay()
 {
+	/**
 	Super::BeginPlay();
 
 	FFileHelper::SaveStringToFile(TEXT(RAW_APP_ID), TEXT("steam_appid.txt"));
@@ -16,6 +17,8 @@ void APSJamJanGameMode::BeginPlay()
 	{
 		MyID = SteamUser()->GetSteamID();
 	}
+	*/
+		
 }
 
 APSJamJanGameMode::APSJamJanGameMode()
