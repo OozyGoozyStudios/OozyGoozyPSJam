@@ -26,8 +26,8 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 		
-	void AttachWeapon(class APSJamJanCharacter* TargetCharacter, class AActor* Weapon);
+	// void AttachWeapon(class APSJamJanCharacter* TargetCharacter, class AActor* Weapon);
 
-	USkeletalMeshComponent* FlashLightPos;
+	// USkeletalMeshComponent* FlashLightPos;
 
 };
