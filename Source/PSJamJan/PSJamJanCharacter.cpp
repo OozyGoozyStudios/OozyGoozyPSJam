@@ -186,7 +186,7 @@ bool APSJamJanCharacter::GetHasRifle()
 {
 	return bHasRifle;
 }
-
+/*
 void APSJamJanCharacter::ShootRay()
 {
 	if (FirstPersonCameraComponent)
@@ -197,14 +197,14 @@ void APSJamJanCharacter::ShootRay()
 		FVector CameraRay = CameraLocation + CameraDirection * 200.0f;
 		if (GetWorld()->LineTraceSingleByChannel(HitResult, CameraLocation, CameraRay, ECollisionChannel::ECC_Visibility))
 		{
-			/*DrawDebugLine(
+			DrawDebugLine(
 				GetWorld(),
 				CameraLocation,
 				HitResult.Location,
 				FColor(255, 0, 0),
 				false, -1, 0,
 				12.333
-			);*/
+			);
 
 		}
 	}
@@ -251,12 +251,13 @@ void APSJamJanCharacter::ShootRay()
 		else
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Not Hitting a interactable object"));
-			/*Interatable = false;*/
+			Interatable = false;
 		}
 	}
 	
 }
 
+*/
 void APSJamJanCharacter::ToggleLight()
 {
 
