@@ -35,7 +35,7 @@ void UPickupComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 	// ...
 }
-
+/*
 void UPickupComponent::AttachWeapon(APSJamJanCharacter* TargetCharacter, AActor* Weapon)
 {
 	APSJamJanCharacter* Character = TargetCharacter;
@@ -44,7 +44,7 @@ void UPickupComponent::AttachWeapon(APSJamJanCharacter* TargetCharacter, AActor*
 		return;
 	}
 
-	TArray<UActorComponent*> FlashLightPosArray = Character->GetComponentsByClass(USkeletalMeshComponent::StaticClass());
+	// TArray<UActorComponent*> FlashLightPosArray = Character->GetComponentsByClass(USkeletalMeshComponent::StaticClass());
 	
 	for(auto& FL : FlashLightPosArray)
 	{
@@ -67,4 +67,5 @@ void UPickupComponent::AttachWeapon(APSJamJanCharacter* TargetCharacter, AActor*
 	}
 	
 }
+*/
 
