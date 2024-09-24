@@ -34,6 +34,11 @@
 			"Name": "EasyMultiSave",
 			"Enabled": true,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/7232621c23174bbbbb64c7bfb6583f6f"
+		},
+		{
+			"Name": "DatamoshEffect",
+			"Enabled": true,
+			"MarketplaceURL": "https://www.unrealengine.com/marketplace/en-US/product/c640e7f0548c40adbfa09d3358334ad7"
 		}
 	]
 }
