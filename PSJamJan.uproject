@@ -39,6 +39,11 @@
 			"Name": "DatamoshEffect",
 			"Enabled": true,
 			"MarketplaceURL": "https://www.unrealengine.com/marketplace/en-US/product/c640e7f0548c40adbfa09d3358334ad7"
+		},
+		{
+			"Name": "UINavigation",
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/b9ee9669c98146cd8433a62ea7f23699"
 		}
 	]
 }
